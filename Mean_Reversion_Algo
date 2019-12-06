@@ -1,0 +1,49 @@
+def initialize(context):
+
+    # Python handles encapsulation with indentation.  Meaning anything within the same indentation is all together. Similar to how some notes are structured.
+    
+    # initialize runs at the start of the program only.  Here, we define what we want the program to remember.
+    
+    #Here I created within context an element called google which is equal to the security id of google. denoted sid(46632)
+    
+	context.google = sid(46632)
+    context.facebook = sid(42950)
+    context.apple =  sid(49051)
+    
+    
+    #if you do not know the sid number, because seriously who does do not worry if you type in the name of the company or the ticker Id a drop box will allow you to pick the right company.
+    
+
+# Here I want to define the next function, handle_data, so I then backspace to the first cursor location to denot that it is not within initialize, I then write the function.
+
+def handle_data(context, data):
+    
+    # Here is where you handle your logic, the logic that you want your program to follow.  For this example we will work on a simple moving algorithm that can be implemented or modified.
+    
+    # Remember the indentation will let you and the compiler know that handle-data owns the code inside.
+    
+    #To implement a moving average, which you will cover later, create an average of a given number of days. We will use five days.
+    
+    #This creates a series of 5 days worth of prices and the second line calculates the mean.
+    five_days = data.history(context.google,'price', 5, '1d')
+    average_price = five_days.mean()
+    
+    #This function is called print it will print whatever is in the parathesis and also the data you give it. Here it will display "average price: [whatever the average [price calculated above is]"
+    print "average price: ", average_price
+    
+    # This function finds the price of google and puts it into current_price
+    current_price = data.current(context.google,'price')
+    
+    #creates a variable called cash to reference how much money you have.
+    cash = context.portfolio.cash
+    
+    #the order function makes a trading order of the type of stock you want to buy or sell and takes the number of shares to buy or sell.
+    
+    # This is and if statement. The if followed by a logical statement will either be true or false. If it is true than the encapsulated code will run. If not it will move on.
+    if current_price > average_price and cash > current_price:
+        number_of_shares = int(cash/current_price)
+        order(context.google, number_of_shares)
+    # This is an 'elif' statement or 'else if'.  This used as a second option if the first one is false. If this statement is true then it will execute its code block. otherwise it will move on.
+    elif current_price < average_price:
+        number_of_shares = context.portfolio.positions[context.google].amount
+        order(context.google, -number_of_shares)
