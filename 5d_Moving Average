@@ -1,0 +1,36 @@
+def initialize(context):
+    
+	context.google = sid(46632)
+    context.facebook = sid(42950)
+    context.apple =  sid(49051)
+    
+    
+
+
+
+
+def handle_data(context, data):
+    
+
+    five_days = data.history(context.google,'price', 5, '1d')
+    average_price = five_days.mean()
+    
+
+    print "average price: ", average_price
+    
+
+    current_price = data.current(context.google,'price')
+    
+    #creates a variable called cash to reference how much money you have.
+    cash = context.portfolio.cash
+    
+    #the order function makes a trading order of the type of stock you want to buy or sell and takes the number of shares to buy or sell.
+    
+    # This is and if statement. The if followed by a logical statement will either be true or false. If it is true than the encapsulated code will run. If not it will move on.
+    if current_price > average_price and cash > current_price:
+        number_of_shares = int(cash/current_price)
+        order(context.google, number_of_shares)
+    # This is an 'elif' statement or 'else if'.  This used as a second option if the first one is false. If this statement is true then it will execute its code block. otherwise it will move on.
+    elif current_price < average_price:
+        number_of_shares = context.portfolio.positions[context.google].amount
+        order(context.google, -number_of_shares)
